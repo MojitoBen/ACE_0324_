@@ -1,0 +1,15 @@
+#Sobel取邊緣資訊
+import cv2
+o = cv2.imread("C:\\Users\\User\\Desktop\\Ben\\AI\\Cutie.png", cv2.IMREAD_GRAYSCALE)
+Sobelx = cv2.Sobel(o, cv2.CV_64F, 1, 0)
+Sobely = cv2.Sobel(o, cv2.CV_64F, 0, 1)
+Sobelx = cv2.convertScaleAbs(Sobelx)
+Sobely = cv2.convertScaleAbs(Sobely)
+Sobelxy = cv2.addWeighted(Sobelx, 0.5, Sobely, 0.5, 0)
+Sobelxy11 = cv2.Sobel(o, cv2.CV_64F, 1, 1)
+Sobelxy11 = cv2.convertScaleAbs(Sobelxy11)
+cv2.imshow("o", o)
+cv2.imshow("xy", Sobelxy)
+cv2.imshow("xy11", Sobelxy11)
+cv2.waitKey()
+cv2.destroyAllWindows()

@@ -1,0 +1,18 @@
+#Sobel和Scharr運算元比較
+import cv2
+o = cv2.imread("C:\\Users\\User\\Desktop\\Ben\\AI\\Cutie.png", cv2.IMREAD_GRAYSCALE)
+Sobelx = cv2.Sobel(o, cv2.CV_64F, 1, 0, ksize=3)
+Sobely = cv2.Sobel(o, cv2.CV_64F, 0, 1, ksize=3)
+Sobelx = cv2.convertScaleAbs(Sobelx)
+Sobely = cv2.convertScaleAbs(Sobely)
+Sobelxy = cv2.addWeighted(Sobelx, 0.5, Sobely, 0.5, 0)
+scharrx = cv2.Sobel(o, cv2.CV_64F, 1, 0)
+scharry = cv2.Sobel(o, cv2.CV_64F, 0, 1)
+scharrx = cv2.convertScaleAbs(scharrx)
+scharry = cv2.convertScaleAbs(scharry)
+scharrxy = cv2.addWeighted(scharrx, 0.5, scharry, 0.5, 0)
+cv2.imshow("o", o)
+cv2.imshow("sobelxy", Sobelxy)
+cv2.imshow("scharrxy", scharrxy)
+cv2.waitKey()
+cv2.destroyAllWindows()
