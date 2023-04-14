@@ -42,3 +42,10 @@ threshold2 = 處理過程中第二設定值
 aperyureSize = 表示Sobel運算元的孔徑大小
 L2gradient = 計算影像梯度幅度，預設false，ture的話用更精確的L2範數計算
 '''
+9.3-X方向邊緣完整資訊
+9.4-Y方向邊緣完整資訊
+9.6-Sobel取邊緣資訊
+9.10-Scharr取邊緣資訊
+9.13-Sobel和Scharr運算元比較
+9.14-Laplacian運算元
+10.1-Canny取邊緣
