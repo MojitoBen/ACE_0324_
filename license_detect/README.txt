@@ -1,5 +1,5 @@
-#需安裝darknet，再把此資料夾移至darknet根目錄下
-#要安裝pymysql.cursors
+###需安裝darknet，再把此資料夾移至darknet根目錄下
+###要安裝pymysql.cursors
 
 ##__A1.py 主程式__
 *要上傳資料庫把71-71註解拿掉(需要的話)
