@@ -29,7 +29,7 @@ class VideoCapture:
                 time.sleep(1)  # wait before retrying
                 self.cap.open(self.name)  # reopen the connection
 
-cap = cv2.VideoCapture('rtsp://admin:Admin1234@192.168.1.152:554/cam/realmonitor?channel=1&subtype=0')
+cap = cv2.VideoCapture('輸入要測試的rtsp')
 
 count=0
 while True:
