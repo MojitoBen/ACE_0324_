@@ -126,7 +126,7 @@ class VideoCapture:
             except Exception as e:
                 print(f"Error: {e}")
                 time.sleep(1)  # wait before retrying
-                self.cap.open('rtsp://admin:Admin1234@192.168.1.151:554/Streaming/Channels/101')  # reopen the connection
+                self.cap.open('在此輸入rtsp')  # reopen the connection
     def read(self):
         return self.q.get()
 
