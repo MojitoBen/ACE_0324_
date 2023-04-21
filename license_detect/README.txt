@@ -17,6 +17,7 @@ database.py  已改用db讀取AI參數
 yolo_all.py  AI處理return2main
 *8行改darknet位置
 *13.14行改num_train跟car_plate位置(已訓練好的車牌模型)
+模型連結: https://drive.google.com/drive/folders/1L3OBn0Z7cKW1ycVsn2XMRaxyloGkbLot?usp=share_link
 
 
 
