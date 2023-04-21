@@ -1,4 +1,5 @@
-﻿
+﻿# **車牌辨識系統**
+
  **需安裝darknet，再把此資料夾移至darknet根目錄下  
  要安裝 pymysql.cursors**
 
