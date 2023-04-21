@@ -11,16 +11,19 @@ try:
     conn = mdb.connect(host='192.168.1.185',user='qadmin', 
         passwd='3753890', db='asc_pms_tai')
     cursor = conn.cursor()
-    sql_fetch_blob_query = "SELECT * from `ai_log_image` where `LogID` = %s"
- 
-    cursor.execute(sql_fetch_blob_query, '4')
-    record = cursor.fetchall()
-    for row in record:
-        print("Id = ", row[0], )
-        print("Name = ", row[1])
-        image = row[2]
-        print("Storing employee image and bio-data on disk \n")
-        write_file(image, 'photo4.png')
+    sql_fetch_blob_query = "SELECT * from `ai_log_image`"
+    cursor.execute(sql_fetch_blob_query)
+    records = cursor.fetchall()
+
+    for i in range(len(records)):
+            print("Reading record:", i+1)
+
+            record = records[i]
+            print("Id = ", record[0])
+            print("Name = ", record[1])
+            image = record[2]
+            print("Storing image on disk...")
+            write_file(image, f'photo_{i+1}.png')
 
  
 except mdb.Error as error:
