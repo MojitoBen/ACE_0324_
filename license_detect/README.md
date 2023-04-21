@@ -22,7 +22,7 @@ _單純跑圖把32行註解，31行放圖片位置
 
 * 8行改darknet位置
 * 13.14行改num\_train跟car\_plate位置(已訓練好的車牌模型)
-
+下載車牌模組:https://drive.google.com/drive/folders/1L3OBn0Z7cKW1ycVsn2XMRaxyloGkbLot?usp=share_link
 
 
 
