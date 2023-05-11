@@ -1,7 +1,7 @@
 # **方向辨識系統**
 **需安裝darknet**    
 
-**Dir_main.py :主程式**        
+## _**Dir_main.py :主程式**_        
 *TARGET= '要辨識的影像'    
 *WEIGHT="...yolov4.weights"    
 *CFG="...yolov4.cfg"    
