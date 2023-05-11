@@ -1,5 +1,5 @@
 # **方向辨識系統**
-**需安裝darknet，再把此資料夾移至darknet根目錄下**    
+**需安裝darknet**    
 
 ##Dir_main.py :主程式    
 *TARGET= '要辨識的影像'    
