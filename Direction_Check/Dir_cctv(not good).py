@@ -158,9 +158,9 @@ def get_direction(obj_list, obj_index):
                 last_obj = obj
 
     if up_count > down_count:
-        return "UP", last_obj
+        return last_obj
     elif down_count > up_count:
-        return "DOWN", last_obj
+        return last_obj
     else:
         return None, None
 
@@ -212,9 +212,12 @@ while True:
             print(targetlist)
             now = time.localtime()
             timestamp = time.strftime("%m%d%H%M%S", now)
+            cv2.putText(frame, f"{targetlist[0]}  :  {targetlist[3]}", (targetlist[1], targetlist[2]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,255), 2)
+            '''
             for idx, center in enumerate(targetlist):
                 cv2.imwrite(r'C:/Users/User/Desktop/direction/cars/'+ str(timestamp) + '_' + str(idx) +'.png', frame)
-
+            '''
+        time.sleep(0.1)
         cv2.imshow('Inference', frame)
         key =  cv2.waitKey(1)
         if key == ord('q'):
