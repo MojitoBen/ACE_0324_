@@ -1,0 +1,50 @@
+
+Log Entry : 下午 01:50:12 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:14 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:16 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:19 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:21 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:28 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:31 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:50:34 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:54:05 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
+
+Log Entry : 下午 01:54:28 2023年5月22日
+  :
+  :Connection must be Open; current state is Closed
+-------------------------------
