@@ -1,0 +1,5 @@
+Address=rtsp://~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+WEIGHT(yolov4.weights)=~~~~~~~~~~~~~~~~~~~~~~~~~~~~yolov4.weights
+CFG(yolov4.cfg)=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~yolov4.cfg
+DATA(coco.data)=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~coco.data
+valid_classes=[ "car","truck"]

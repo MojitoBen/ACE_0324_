@@ -1,0 +1,5 @@
+192.168.x.x#host
+xxxxxxxx#user
+xxxxxxx#password
+xxxxxxx#db
+utf8#charset
