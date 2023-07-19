@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>JSON Data Display</title>
+</head>
+<body>
+    <h1>JSON Data</h1>
+    <ul>
+        <li><b>TagSN:</b> {{ data['TagSN'] }}</li>
+        <li><b>TagNumber:</b>{{ data['TagNumber'] }}</li>>
+        <li><b>TagImage:</b><br><img src="{{ url_for('static', filename=data['TagImage']) }}"></li>
+    </ul>
+</body>
+</html>
