@@ -3,3 +3,9 @@
 
 **python resource**
 https://github.com/FavioVazquez/ds-cheatsheets/tree/master/Python
+
+**Requirements**
+python 3.7 up
+darknet
+
+DataBase、IP、Port、Storage
