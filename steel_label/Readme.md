@@ -8,8 +8,8 @@
     
 ## _**實際範例圖片**_
 
-![image](https://github.com/MojitoBen/ACE_0324_/blob/main/Direction_Check/car.gif)
+![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_label/output2.gif)
+![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_label/ui_demo.png)
 
 
-
-**其他可忽略**    
+**:D**    
