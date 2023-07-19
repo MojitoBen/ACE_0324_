@@ -2,17 +2,13 @@
 **需安裝darknet**    
 
 ## _**Dir_main.py :主程式**_        
-*TARGET= '要辨識的影像'    
-*WEIGHT="...yolov4.weights"    
-*CFG="...yolov4.cfg"    
-*DATA="...coco.data"    
-*81行valid_classes可以添加要辨識的物件，範圍在coco.name裡    
-*189行log位置更改    
-*229行要擷取的照片位置更改    
+  程式碼未整理但不難理解    
+  部分修改後改Area、Data跟SQL_server可運作    
+  Area可用Area_set.py手選框出    
+    
+## _**實際範例圖片**_
 
-## _**Dir_cctv(not good).py**_
-
-
+![image](https://github.com/MojitoBen/ACE_0324_/blob/main/Direction_Check/car.gif)
 
 
 
