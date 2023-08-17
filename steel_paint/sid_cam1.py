@@ -6,7 +6,7 @@ import math
 
 network, class_names, class_colors = load_network(r"C:/Users/Asc-user/Documents/YOLO/Y562_train/sid_train/yolov4-tiny.cfg", 
                                                   r"C:/Users/Asc-user/Documents/YOLO/Y562_train/sid_train/obj.data", 
-                                                  r"C:/Users/Asc-user/Documents/YOLO/Y562_2PLCM/sid_paint_v1.weights")
+                                                  r"C:/Users/Asc-user/Documents/YOLO/Y562_2PLCM/sid_paint_v3.weights")
 
 def darknet_helper(image, width, height):
     darknet_image = make_image(width, height, 3)
