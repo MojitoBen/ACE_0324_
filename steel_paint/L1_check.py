@@ -39,6 +39,6 @@ def data_server(host, port):
             server_socket.close()  # 關閉伺服器端Socket，以便重新綁定
 
 if __name__ == '__main__':
-    host = '192.168.1.185'  # 主機 IP
+    host = '192.168.XX.XXX'  # 主機 IP
     port = 19000  # 通訊端口，這裡我們使用整數而不是字串
     data_server(host, port)
