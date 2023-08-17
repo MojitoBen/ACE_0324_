@@ -4,10 +4,10 @@ import logging
 import os
 
 def connected():
-    host = "192.168.1.185"
-    user = "qadmin"
-    password = "3753890"
-    db = "asc_ai"
+    host = "192.168.XX.XXX"
+    user = "XXXXXXX"
+    password = "XXXXXXX"
+    db = "XXXXXXX"
     charset = "utf8"
 
     connection = pymysql.connect(host=host, user=user, password=password, db=db, charset=charset)
