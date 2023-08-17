@@ -97,7 +97,7 @@ if __name__ == '__main__':
     
     #host = '192.168.1.126'  # 主機 IP
     #port = 502  # 通訊端口
-    host = '192.168.1.185'
+    host = '192.168.XX.XXX'
     port = 8000
     state = 'waiting'
     sent_result = False
