@@ -5,7 +5,7 @@
 
 ## Y562_cam1.py :主程式(不上傳進資料庫單純辨識)
 
-![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_paint/0717_test.png)
+![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_paint/Y562_resource/0717_test.png)
 
 ## L1_check.py  :接收前站鋼捲資料
 
@@ -17,7 +17,7 @@
 * 4個IMG框分別是廠商、現場畫面、鋼捲原圖、噴字圖
 * 要在UI_functions調整資料庫的connected
 
-![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_paint/UI_screenshot_deal.png)
+![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_paint/Y562_resource/UI_screenshot_deal.png)
 
 ## steel_rotate180.py & sid_cam1.py : 辨識用
 
