@@ -26,7 +26,7 @@ def simulate_relay_trigger(host, port, data):
         client_socket2.close()  # 關閉連接
 
 if __name__ == '__main__':
-    host = '192.168.1.185'  # 主機 IP
+    host = '192.168.XX.XXX'  # 主機 IP
     port = 8000  # 通訊端口
     data_to_send = "483a01410100000000000000c54544"  # 要傳送的數據
 
