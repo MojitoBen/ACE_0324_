@@ -24,4 +24,8 @@
 
 * steel_rotate180.py跟sid_cam1.py裡面的darknet跟load_network部分要改成自己檔案位置的路徑
 
+## 流程圖
+
+![image](https://github.com/MojitoBen/MojitoBen.github.io/blob/main/github/Y562_flow_chart.jpg)
+
 
