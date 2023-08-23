@@ -1,7 +1,9 @@
 ﻿# **鋼捲噴字辨識系統**
 
  **需安裝darknet，再把此資料夾移至darknet根目錄下  
- 要安裝 pymysql.cursors**
+ 要安裝 pymysql.cursors    
+ opencv - 最新就好、 logging、threading、queue、time、datetime     
+ **
 
 ## Y562_cam1.py :主程式(不上傳進資料庫單純辨識)
 
