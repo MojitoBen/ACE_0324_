@@ -26,6 +26,8 @@
 
 ## 流程圖
 
+* 簡易流程圖如下:
+
 ![image](https://github.com/MojitoBen/MojitoBen.github.io/blob/main/github/Y562_flow_chart.jpg)
 
 
