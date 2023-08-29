@@ -1,7 +1,3 @@
-'''
-此檔案為製作train.txt
-將資料夾下圖片名稱寫進txt
-'''
 import os
 import glob
 
@@ -16,7 +12,7 @@ def write_file_names(path, output_file):
 
 # 指定要搜尋的路徑和輸出的檔案名稱
 folder_path = 'C:/Users/Asc-user/Documents/YOLO/0605/val_data'
-output_file_path = 'C:/Users/Asc-user/Documents/YOLO/0605/train_data/val.txt'
+output_file_path = 'C:/Users/Asc-user/Documents/YOLO/Y562_train/steel_train/train.txt'
 
 # 呼叫函式將檔案名稱寫進txt檔案
 write_file_names(folder_path, output_file_path)

@@ -1,13 +1,8 @@
-'''
-將labelme的json檔轉成txt檔
-適用於矩形框
-需改寫內容:CLASSES、dir_json、dir_txt
-'''
 import os
 import json
 import numpy as np
 
-CLASSES=["ID"] #class換成分類的內容，多個內容用","區隔
+CLASSES=["ID"] #class
 def convert(size,box):
     '''
     input:
@@ -32,14 +27,14 @@ def json2txt(path_json,path_txt):
     with open(path_json, "r", encoding="utf-8") as path_json:
         print(path_json)
         jsonx = json.load(path_json)
-        width=int(jsonx["imageWidth"])      # 原圖寬
-        height=int(jsonx["imageHeight"])    # 原圖高
+        width=int(jsonx["imageWidth"])      # 原图的宽
+        height=int(jsonx["imageHeight"])    # 原图的高
         with open(path_txt,"w+") as ftxt:
             # 遍历每一个bbox对象
             for shape in jsonx["shapes"]:
-                obj_cls=str(shape["label"])     # 類別
-                cls_id=CLASSES.index(obj_cls)   # 類別索引
-                points=np.array(shape["points"])    # 四點(x1,y1,x2,y2)
+                obj_cls=str(shape["label"])     # 获取类别
+                cls_id=CLASSES.index(obj_cls)   # 获取类别索引
+                points=np.array(shape["points"])    # 获取(x1,y1,x2,y2)
                 x1=int(points[0][0])
                 y1=int(points[0][1])
                 x2=int(points[2][0])

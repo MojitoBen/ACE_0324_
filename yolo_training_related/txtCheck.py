@@ -1,7 +1,3 @@
-'''
-用來確定圖與txt內容一致
-顯示影像與類別標記框
-'''
 import cv2
 
 def visualize_bbox(image_path, txt_path):
@@ -30,13 +26,15 @@ def visualize_bbox(image_path, txt_path):
         cv2.putText(image, str(cls_id), (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     # 顯示圖片
+    w,h,c  = image.shape
+    image = cv2.resize(image, (h//3, w//3), interpolation=cv2.INTER_CUBIC)
     cv2.imshow('Image with Bounding Boxes', image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
 # 原始圖片路徑和對應的 txt 檔案路徑
-image_path = 'C:/Users/Asc-user/Documents/YOLO/0605/val_data/178713-AUV-1285.jpeg'
-txt_path = 'C:/Users/Asc-user/Documents/YOLO/0605/val_data/178713-AUV-1285.txt'
+image_path = 'C:/Users/Asc-user/Documents/YOLO/Y562_train/steel3/NVR_ch1_main_20230815093954_20230815094030_id.png'
+txt_path = 'C:/Users/Asc-user/Documents/YOLO/Y562_train/steel3/NVR_ch1_main_20230815093954_20230815094030_id.txt'
 
 # 呼叫函式進行繪製和顯示
 visualize_bbox(image_path, txt_path)
