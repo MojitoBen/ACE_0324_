@@ -1,3 +1,6 @@
+'''
+將圖片資料寫進資料庫
+'''
 import pymysql
 import base64
 
@@ -7,18 +10,16 @@ with open('su.jfif', 'rb') as file:
     base64_data = base64.b64encode(image_data)
 
 conn = pymysql.connect(
-            host='192.168.1.185',
-            user='ben',
-            password=',./kl;iop890',
-            database='summon',
-            port = 3305
+            host='192.168.XX.XXX',
+            user='XXXXXX',
+            password='XXXXXX',
+            database='XXXXXX',
+            port = XXXXX
         )
 #conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
 
-# 插入圖片資料
-cursor.execute('INSERT INTO hero_area_img (Map) VALUES (%s)', (base64_data,))
+cursor.execute('INSERT INTO hero_area_img (Map) VALUES (%s)', (base64_data,)) #選擇插入圖片資料位置
 
-# 提交更改並關閉資料庫連接
 conn.commit()
 conn.close()
