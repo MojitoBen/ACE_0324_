@@ -1,14 +1,13 @@
 import sys
-sys.path.insert(4, r'C:/Users/Asc-user/Documents/YOLO/darknet')
+sys.path.insert(0, r"/home/asc/Desktop/darknet-master")
 from darknet import *
 import cv2
 from sid_cam1 import sid_detect
 
-network, class_names, class_colors = load_network(r"C:/Users/Asc-user/Documents/YOLO/Y562_2PLCM/AI_CS/yolov4-tiny.cfg", 
-                                                  r"C:/Users/Asc-user/Documents/YOLO/Y562_2PLCM/AI_CS/obj.data", 
-                                                  r"C:/Users/Asc-user/Documents/YOLO/Y562_2PLCM/steel_paint_v4.weights")
-#/home/asc/darknet/weights/steel_v14.weights
-#/home/asc/darknet/backup/yolov4-tiny_best.weights
+network, class_names, class_colors = load_network(r"/home/asc/Desktop/Y562_0815/weight/steel_train/yolov4-tiny.cfg", 
+                                                  r"/home/asc/Desktop/Y562_0815/weight/steel_train/obj.data", 
+                                                  r"/home/asc/Desktop/Y562_0815/weight/shid_paint_v3.weights")
+
 raw_list = []
 found_text = False
 saved_sid_image = None
@@ -46,7 +45,7 @@ def steel_detect_1(frame):
         left, top, right, bottom = int(left * width_ratio), int(top * height_ratio), int(right * width_ratio), int(bottom * height_ratio)
         top, bottom, left, right = abs(top), abs(bottom), abs(left), abs(right)
         cv2.rectangle(frame, (left-40, top-20), (right+40, bottom+20), (0, 255, 0), 2) #加框測試用################
-        if label == 'sid':    #sid 印刷   hid 手寫
+        if label == 'sid' or label =='hid':    #sid 印刷   hid 手寫
             try:
                 sid_image = image[top-20:bottom+20, left-40:right+40]
             except:
@@ -56,16 +55,16 @@ def steel_detect_1(frame):
             image_list[0] = sid_image
 
             h, w, c = sid_image.shape
-            if h > w:
+            if h > w or w > h or w == h:
                 ro90 = cv2.rotate(sid_image, cv2.ROTATE_90_CLOCKWISE)
                 text, image_ = sid_detect(ro90)
-                if len(text) >= 6 and text not in text_list:
+                if len(text) >= 5 and text not in text_list:
                     text_list.append(text)
                     outimage = image_
 
                 ro270 = cv2.rotate(sid_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
                 text, image_ = sid_detect(ro270)
-                if len(text) >= 6 and text not in text_list:
+                if len(text) >= 5 and text not in text_list:
                     text_list.append(text)
                     outimage = image_
             else:

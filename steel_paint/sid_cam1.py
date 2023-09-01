@@ -1,12 +1,12 @@
 import sys
-sys.path.insert(4, r'C:/Users/Asc-user/Documents/YOLO/darknet')
+sys.path.insert(0, r"/home/asc/Desktop/darknet-master")
 from darknet import *
 import cv2
 import math
 
-network, class_names, class_colors = load_network(r"C:/Users/Asc-user/Documents/YOLO/Y562_train/sid_train/yolov4-tiny.cfg", 
-                                                  r"C:/Users/Asc-user/Documents/YOLO/Y562_train/sid_train/obj.data", 
-                                                  r"C:/Users/Asc-user/Documents/YOLO/Y562_2PLCM/sid_paint_v3.weights")
+network, class_names, class_colors = load_network(r"/home/asc/Desktop/Y562_0815/weight/sid_train/yolov4-tiny.cfg", 
+                                                  r"/home/asc/Desktop/Y562_0815/weight/sid_train/obj.data", 
+                                                  r"/home/asc/Desktop/Y562_0815/weight/shid_num_v3.weights")
 
 def darknet_helper(image, width, height):
     darknet_image = make_image(width, height, 3)
@@ -16,7 +16,7 @@ def darknet_helper(image, width, height):
     width_ratio = img_width / width
     height_ratio = img_height / height
     copy_image_from_bytes(darknet_image, img_resized.tobytes())
-    detections = detect_image(network, class_names, darknet_image, thresh=0.6)
+    detections = detect_image(network, class_names, darknet_image, thresh=0.4)
     free_image(darknet_image)
 
     return detections, width_ratio, height_ratio
@@ -95,7 +95,7 @@ def sid_detect(image):
         else:
             avg_confidence = 0.0
     
-    if avg_confidence is not None and round(avg_confidence) < 90:
+    if avg_confidence is not None and round(avg_confidence) < 60:
         text = ''
         image = cv2.rotate(image, cv2.ROTATE_180)
         detections, _, _ = darknet_helper(image, 352, 160)
