@@ -30,4 +30,3 @@ wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optim
 
 ./darknet detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights data/person.jpg -i 0 -thresh 0.25    
 
-DataBase、IP、Port、Storage    
