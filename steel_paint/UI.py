@@ -9,8 +9,8 @@ import logging
 # 建立主視窗
 root = tk.Tk()
 root.title("鋼捲歷史資料查詢系統")
-root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight() - 80)) 
-root.state('zoomed') #視窗最大化
+#root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight() - 80)) 
+#root.state('zoomed') #視窗最大化
 # 獲取螢幕尺寸
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, filename=logname, filemode='a', format=FORMAT)
     image_path = "chong.png"
     display_image_on_canvas(img_frame1, image_path)
-    stream_url1 = 'rtsp://admin:Admin1234@192.168.1.145:554/cam/realmonitor?channel=1&subtype=0' #cam1
+    stream_url1 = 'rtsp:這裡放串流' #cam1
     cap = cv2.VideoCapture(stream_url1)
     update_frame2()
     initialize()

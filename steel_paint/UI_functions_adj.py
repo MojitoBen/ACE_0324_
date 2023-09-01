@@ -23,9 +23,9 @@ FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 logging.basicConfig(level=logging.INFO, filename=logname, filemode='a', format=FORMAT)
 
 def connect_to_database():
-    host = "192.168.1.185"
-    user = "qadmin"
-    password = "3753890"
+    host = "192.168.XXX.XXX"
+    user = "xxxxxxx"
+    password = "xxxxxxx"
     db = "asc_ai"
     charset = "utf8"
 
@@ -752,7 +752,7 @@ def display_image_on_canvas(canvas, image_path, window_width, window_height):
     def resize_image(image_path, width, height):
         # 使用PIL庫來載入圖片並進行resize
         image = Image.open(image_path)
-        resized_image = image.resize((width, height), Image.ANTIALIAS)
+        resized_image = image.resize((width, height), Image.LANCZOS)
         return ImageTk.PhotoImage(resized_image)
     # 調整圖片大小
     width=int(window_width * 0.23)

@@ -24,9 +24,9 @@ logging.basicConfig(level=logging.INFO, filename=logname, filemode='a', format=F
 
 
 def connect_to_database():
-    host = "192.168.1.185"
-    user = "qadmin"
-    password = "3753890"
+    host = "192.168.XX.XXX"
+    user = "xxxxxxx"
+    password = "xxxxxxx"
     db = "asc_ai"
     charset = "utf8"
 
@@ -72,6 +72,7 @@ def select_date(selected_date_var, root, query_entry,total_pages_label,tree, img
         start_date = end_date - timedelta(days=29)
     start_date = datetime.strptime(start_date_str, "%Y/%m/%d").date()
     end_date = datetime.strptime(end_date_str, "%Y/%m/%d").date()
+    check_date = end_date + timedelta(days=1)
 
 
     # 設定日期選擇框的標籤
@@ -91,7 +92,7 @@ def select_date(selected_date_var, root, query_entry,total_pages_label,tree, img
     end_date_label.pack()
 
     end_date_entry = Entry(date_window, font=("Arial", 20))
-    end_date_entry.insert(0, end_date.strftime("%Y/%m/%d"))
+    end_date_entry.insert(0, check_date.strftime("%Y/%m/%d"))
     end_date_entry.pack()
 
     def confirm_date():
@@ -102,6 +103,7 @@ def select_date(selected_date_var, root, query_entry,total_pages_label,tree, img
 
             start_date = datetime.strptime(start_date_str, "%Y/%m/%d").date()
             end_date = datetime.strptime(end_date_str, "%Y/%m/%d").date()
+            check_date = end_date + timedelta(days=1)
 
             # 檢查日期範圍的有效性
             if start_date > end_date:
@@ -110,7 +112,7 @@ def select_date(selected_date_var, root, query_entry,total_pages_label,tree, img
                 return
 
             # 將日期格式轉換成正確的格式
-            selected_date_var.set(f"{start_date.strftime('%Y/%m/%d')} ~ {end_date.strftime('%Y/%m/%d')}")
+            selected_date_var.set(f"{start_date.strftime('%Y/%m/%d')} ~ {check_date.strftime('%Y/%m/%d')}")
 
             # 關閉日期選擇視窗
             date_window.destroy()
@@ -405,7 +407,7 @@ def show_image_in_frame(image_data, frame):
 
     # 根據框架的大小調整圖像大小
     img_width, img_height = 450, 350
-    image = image.resize((img_width, img_height), Image.ANTIALIAS)
+    image = image.resize((img_width, img_height), Image.LANCZOS)
 
     # 將圖像轉換為PhotoImage對象
     photo = ImageTk.PhotoImage(image)
@@ -497,7 +499,7 @@ def show_enlarge_view(img_frame3, img_frame4, tree):
                 image = Image.open(BytesIO(image_data))
 
             img_width, img_height = 800, 600
-            image = image.resize((img_width, img_height), Image.ANTIALIAS)
+            image = image.resize((img_width, img_height), Image.LANCZOS)
             # 將PIL Image轉換為PhotoImage對象
             photo_image = ImageTk.PhotoImage(image)
 
@@ -680,6 +682,7 @@ def update(selected_date_var,tree,total_pages_label,root,query_entry, img_frame1
                 tree.insert("", tk.END, values=(sn, snap_time, l1_data, cam1_num, result), tags=("CHECK",))
             else:
                 tree.insert("", tk.END, values=(sn, snap_time, l1_data, cam1_num, result), tags=("NG",))
+        '''
         # 檢查第一筆資料的比對結果
         if results[0][4] == "NG" and notification == False and ng_Checked == False:
             notification = True
@@ -733,7 +736,7 @@ def update(selected_date_var,tree,total_pages_label,root,query_entry, img_frame1
             ng_button.pack(side=tk.LEFT, padx=5, pady=5)
 
             flash_window(update_window) 
-
+            '''
     root.after(1000, lambda: update(selected_date_var,tree,total_pages_label,root,query_entry, img_frame1, img_frame2, img_frame3, img_frame4, var_label2, var_label3, var_label4, image_label2))
 
 
@@ -741,7 +744,7 @@ def display_image_on_canvas(canvas, image_path):
     def resize_image(image_path, width, height):
         # 使用PIL庫來載入圖片並進行resize
         image = Image.open(image_path)
-        resized_image = image.resize((width, height), Image.ANTIALIAS)
+        resized_image = image.resize((width, height), Image.LANCZOS)
         return ImageTk.PhotoImage(resized_image)
     # 調整圖片大小
     resized_image = resize_image(image_path, 450, 350)
