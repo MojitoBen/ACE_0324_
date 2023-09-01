@@ -4,10 +4,10 @@ import logging
 import os
 
 def connected():
-    host = "192.168.XX.XXX"
-    user = "XXXXXXX"
-    password = "XXXXXXX"
-    db = "XXXXXXX"
+    host = "192.168.1.51"
+    user = "qadmin"
+    password = "3753890"
+    db = "asc_ai"
     charset = "utf8"
 
     connection = pymysql.connect(host=host, user=user, password=password, db=db, charset=charset)
@@ -257,6 +257,6 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.basicConfig(level=logging.DEBUG, filename=logname, filemode='a', format=FORMAT)
 
 if __name__ == '__main__':
-    decoded_data = '1203485'
+    decoded_data = '5145088'
     insert_data(decoded_data)
     #update_snaptime()
