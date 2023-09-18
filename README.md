@@ -4,6 +4,9 @@
 **python resource**
 https://github.com/FavioVazquez/ds-cheatsheets/tree/master/Python
 
+**Programming resource**
+https://www.w3schools.com
+
 **Requirements**
 python 3.7 up     
 darknet    
