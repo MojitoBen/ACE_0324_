@@ -53,56 +53,67 @@ def startrun():
     timeset = 0
     ip_address = '192.168.1.111'
     cap = VideoCapture('rtsp://admin:djs123456@192.168.1.108:554/cam/realmonitor?channel=2&subtype=0')
-    while True:
-        start = time.time()
-        frame = cap.read()
-        print(start)
-        #frame = cv2.imread(r'D:\head\01274_2023-02-10_2_org.png')
-        w,h,c  = frame.shape
-        try:
-            raw_list, image = steel_detect_2(frame)
-        except:
-           logging.error('camera connecting failed', exc_info=True)
-           text = ''
-           print('error')
-           pass
-        clear_data = True
-        try:
-           image = img2base64(image)
-        except:
-           text=''
-        for text in raw_list:
-            if len(text)>5:
-                clear_data == False
-                timeset = 0
-                if not any(text in s for s in List1):
-                        List1.append([text,1])
+    
+    try:
+    
+        while True:
+            start = time.time()
+            frame = cap.read()
+            print(start)
+            #frame = cv2.imread(r'D:\head\01274_2023-02-10_2_org.png')
+            w,h,c  = frame.shape
+            try:
+                raw_list, image = steel_detect_2(frame)
+            except:
+                logging.error('steel_detect failed', exc_info=True)
+                text = ''
+                print('error')
+                pass
+            clear_data = True
+            try:
+                image = img2base64(image)
+            except:
+                text=''
+                logging.error('img2base64 failed', exc_info=True)
+            for text in raw_list:
+                if len(text)>5:
+                    if not any(text in s for s in List1):
+                            #List1.append([text,1])
+                            List1 = [[text, 1]]
+                    else:
+                        '''
+                        columns = list(zip(*List1))
+                        post = columns[0].index(text)
+                        List1[post][1]+=1
+                        '''
+                        pass
+
+                    List1 = sorted(List1,reverse = True, key = lambda s: s[1])
+                    upload1 = []
+                    if len(List1)>0:
+                        for tmp in List1:
+                            upload1.append(tmp[0])
+
+                        print('upload1',upload1)                 
+                        data = {'TagSN': 3,
+                                'TagNumber': upload1,
+                                'TagImage': image
+                                }
+                        try:
+                            requests.post('http://'+ip_address+':8000/send_json_sn3', json=data, timeout=2)
+                        except:
+                            logging.error('camera connecting failed', exc_info=True)
+                            pass
+                        if len(List1)>=5:
+                            List1.pop(0)
                 else:
-                    columns = list(zip(*List1))
-                    post = columns[0].index(text)
-                    List1[post][1]+=1
+                    List1=[]
+                    data = {'TagSN': 3,
+                            'TagNumber': '',
+                            'TagImage': ''  }
+                    clear_data == False
 
-                List1 = sorted(List1,reverse = True, key = lambda s: s[1])
-                upload1 = []
-                if len(List1)>0:
-                            for tmp in List1:
-                                upload1.append(tmp[0])
-
-                            print('upload1',upload1)                 
-                            data = {'TagSN': 3,
-                                    'TagNumber': upload1,
-                                    'TagImage': image
-                                    }
-                            try:
-                               requests.post('http://'+ip_address+':8000/send_json_sn3', json=data, timeout=2)
-                            except:
-                               logging.error('camera connecting failed', exc_info=True)
-                               pass
-                            if len(List1)>=5:
-                                List1.pop(0)
-
-
-            if clear_data == 5:
+            if clear_data == False:
                     if timeset > 5:            
                         List1=[]
                         data = {'TagSN': 3,
@@ -118,28 +129,29 @@ def startrun():
                         timeset = timeset+time.time()-start
 
 
-        #frame = cv2.resize(frame, (h//3, w//3), interpolation=cv2.INTER_CUBIC)
-        #cv2.imshow('www',frame)            
-        #if cv2.waitKey(1) == ord('q'):
-            #break
+            #frame = cv2.resize(frame, (h//3, w//3), interpolation=cv2.INTER_CUBIC)
+            #cv2.imshow('www',frame)            
+            #if cv2.waitKey(1) == ord('q'):
+                #break
 
-
-    cv2.destroyAllWindows()
-    cap.release()     
+    except:
+        logging.error('camera connecting failed', exc_info=True)  
+        cv2.destroyAllWindows()
+        cap.release()     
     
 if __name__ == '__main__':
 
-     logname = 'log/'
-     logname = logname+"{:%Y-%m-%d}".format(datetime.datetime.now())+'.log'
-     FORMAT = '%(asctime)s %(levelname)s: %(message)s'
-     logging.getLogger("requests").setLevel(logging.WARNING)  
-     logging.getLogger("urllib3").setLevel(logging.WARNING)  
-     logging.basicConfig(level=logging.DEBUG, filename=logname, filemode='a', format=FORMAT)
-         
-     while True:
-       try:
-         startrun()
-       except:
-         logging.error('camera connecting failed', exc_info=True)
-         print('error')
-       time.sleep(3)
+    logname = 'log/'
+    logname = logname+"{:%Y-%m-%d}".format(datetime.datetime.now())+'.log'
+    FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+    logging.getLogger("requests").setLevel(logging.WARNING)  
+    logging.getLogger("urllib3").setLevel(logging.WARNING)  
+    logging.basicConfig(level=logging.DEBUG, filename=logname, filemode='a', format=FORMAT)
+        
+    while True:
+        try:
+            startrun()
+        except:
+            logging.error('camera connecting failed', exc_info=True)
+            print('error')
+        time.sleep(3)
