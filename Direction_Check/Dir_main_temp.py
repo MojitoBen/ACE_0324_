@@ -52,9 +52,9 @@ class VideoCapture:
         self.q = queue.Queue()
         self.width = WIDTH    # 取得影像寬度
         self.height = HEIGHT  # 取得影像高度
-        self.fourcc = cv2.VideoWriter_fourcc(*'XVID')               # 設定影片的格式為 MJPG(x)XVID
+        self.fourcc = cv2.VideoWriter_fourcc(*'MJPG')               # 設定影片的格式為 MJPG(x)XVID
         self.out = None  # 初始化影片寫入器
-        self.interval = 3600  # 影片生成間隔（60min）
+        self.interval = 3600  # 影片生成間隔（30min）
         self.start_time = time.time()  # 記錄開始時間
         self.output_counter = 0  # 影片計數器
         self.output_path = '//Asc-server/e/車流方向/'
@@ -165,8 +165,8 @@ def TrackObj(newCenterList,ObjList1,objIndex):
 
         return ObjListTemp, objIndex
     except Exception as err:
-        logging.error('TrackObj error', exc_info=True)
-        print('TrackObj error')
+        logging.error('check error', exc_info=True)
+        print('check error')
         return ObjListTemp,objIndex
 
 #位置比對程式
@@ -174,7 +174,6 @@ def MatchObj(newP, ObjList1, ObjIndex):
     dtlist = []
     dtIndex = []
     direction = " "
-    dy = None
     global count_id
 
     try:
@@ -185,7 +184,7 @@ def MatchObj(newP, ObjList1, ObjIndex):
         # 計算物件與前幾個畫面物件的距離
         for i in range(start_index, len(ObjList1)):
             distant = ((ObjList1[i][1] - newP[0]) ** 2 + (ObjList1[i][2] - newP[1]) ** 2) ** 0.5
-            if distant < 150:
+            if distant < 250:
                 dtIndex.append(i)
                 dtlist.append(distant)
 
@@ -198,13 +197,12 @@ def MatchObj(newP, ObjList1, ObjIndex):
             xx2, yy2 = newP[0], newP[1]
             dx, dy = xx2 - xx1, yy2 - yy1
             movement = abs(((closest_object[1] - newP[0]) ** 2 + (closest_object[2] - newP[1]) ** 2) ** 0.5)
-
             #
-            if dy > 8 and round(movement) > 10:
+            if dy > 8 and round(movement) > 20:
                 direction = "DOWN"
-            elif dy < -8 and round(movement) > 10:
+            elif dy < -8 and round(movement) > 20:
                 direction = "UP"
-            elif -8 <= dy <= 8 or round(movement) < 10:
+            elif -8 <= dy <= 8 or round(movement) < 20:
                 direction = "stop"
 
         if dtlist == []: 
@@ -215,13 +213,11 @@ def MatchObj(newP, ObjList1, ObjIndex):
             Obj[1], Obj[2] = newP[0], newP[1]
             Obj[3] = direction
             Obj[4] = int(Obj[4]) + 1
-        if dy:
-            print(f"目標:{ObjIndex}，Y軸差:{dy}，移動距離:{round(movement)}")
         return Obj, ObjIndex
 
     except:
-        logging.error('MatchObj error', exc_info=True)
-        print('MatchObj error')
+        logging.error('check error', exc_info=True)
+        print('check error')
         return Obj, ObjIndex
 
 def get_direction(obj_list, obj_index):
@@ -268,14 +264,14 @@ def update_target_list(target):
             count_up += 1
             previous_count_up = target_id
             print("count_up : ", f'{count_up} = {target_id} 號車')
-            if previous_count_up == previous_count_down: #實際使用之後可能需要把count_down -= 1移除，此動作只是為了澄信街在辨識區域內不規則位移做的手段
+            if previous_count_up == previous_count_down:
                 count_down -= 1
     elif target_direction == "DOWN":
         if previous_count_down != target_id:
             count_down += 1
             previous_count_down = target_id
             print("count_down : ", f'{count_down} = {target_id} 號車')
-            if previous_count_down == previous_count_up: #實際使用之後可能需要把count_down -= 1移除，此動作只是為了澄信街在辨識區域內不規則位移做的手段
+            if previous_count_down == previous_count_up:
                 count_up -= 1
     ''' 可以解決靜止物體影響其他車流狀況，但某些情況會讓行進中車輛在判斷區域尾端減速至stop狀況使方向回調導致記數少1
     elif target_direction == "stop":
@@ -295,8 +291,13 @@ sum1=[]
 cap = VideoCapture(TARGET)
 ObjList=[]
 
+#log
+logname = r'C:/Users/Asc-user/Documents/YOLO/direction/log/'
+logname = logname+"{:%Y-%m-%d}".format(datetime.datetime.now())+'.log'
+FORMAT = '%(asctime)s %(levelname)s: %(message)s'
+logging.basicConfig(level=logging.ERROR, filename=logname, filemode='a', format=FORMAT) 
 #log_print
-print_logname = 'log/print_log/'
+print_logname = r'C:/Users/Asc-user/Documents/YOLO/direction/log/print_log/'
 print_logname = print_logname + "{:%Y-%m-%d}".format(datetime.datetime.now()) + '.log'
 sys.stdout = PrintToLog(print_logname)
 #SQL
@@ -311,12 +312,11 @@ def upload_SQL(insert_query, data):
         print('failed to upload')
         pass
 
-def img2base64(image, quality=50):
-
-    retval, buffer = cv2.imencode('.jpg', image, [cv2.IMWRITE_JPEG_QUALITY, quality])
+def img2base64(image):
+    retval, buffer = cv2.imencode('.png', image)
     image = base64.b64encode(buffer)
     image = image.decode('utf-8')
-
+    
     return image
 
 while True:
@@ -377,13 +377,16 @@ while True:
         if key == ord('q'):
             break
         etime = time.time()
-        '''
+        #fps = round(1/(etime-stime),3)
+        #sum1.append(fps)
+        #print("FPS: {}".format(fps))
+        
         if out is not None :
             success = out.write(frame)  # 將影像寫入影片
-            '''
+        
     except Exception as err:
-        logging.error('main error', exc_info=True)
-        print('main error')
+        logging.error('check error', exc_info=True)
+        print('check error')
         break
 
 if cap.out is not None:

@@ -13,38 +13,36 @@ from Dir_data import *
 sys.path.insert(4, r'C:/Users/Asc-user/Documents/YOLO/darknet')
 from darknet import *
 
-#車流辨識用
-objIndex=0
-ObjList=[] #(index, px, py)
+# 車流辨識用
+objIndex = 0
+ObjList = []  # (index, px, py)
 count_id = 0
-count_up = 0
-count_down =0
-previous_count_up = 0
-previous_count_down = 0
-SQL_count_up = 0
-SQL_count_down = 0
+count_left = 0
+count_right = 0
+previous_count_left = 0
+previous_count_right = 0
+SQL_count_left = 0
+SQL_count_right = 0
 
 Data_list = Get_data()
-TARGET= Data_list[0]
-WEIGHT= Data_list[1]
-CFG= Data_list[2]
-DATA= Data_list[3]
-#WEIGHT= r'C:/Users/Asc-user/Documents/YOLO/darknet/yolov4.weights'
-#CFG=r'C:/Users/Asc-user/Documents/YOLO/darknet/cfg/yolov4.cfg'
-#DATA=r'C:/Users/Asc-user/Documents/YOLO/darknet/cfg/coco.data'
+TARGET = Data_list[0]
+WEIGHT = Data_list[1]
+CFG = Data_list[2]
+DATA = Data_list[3]
 
-CONFTH=0.65
-(WIDTH,HEIGHT)=(1920,1080)
+CONFTH = 0.65
+(WIDTH, HEIGHT) = (1920, 1080)
 network, class_names, class_colors = load_network(
     CFG,
     DATA,
     WEIGHT,
     batch_size=1
 )
-#判斷區域
+
+# 判斷區域
 Coordinate_list = Get_area()
-x1, y1 = int(Coordinate_list[0]) , int(Coordinate_list[1])
-x2, y2 = int(Coordinate_list[2]) , int(Coordinate_list[3])
+x1, y1 = int(Coordinate_list[0]), int(Coordinate_list[1])
+x2, y2 = int(Coordinate_list[2]), int(Coordinate_list[3])
 
 class VideoCapture:
     def __init__(self, name):
@@ -130,7 +128,6 @@ def draw_boxes(detections, image, colors):
         images_list.append(car_img)
 
     return image,images_list
-
 def image_detection(image, network, class_names, class_colors, thresh):
     darknet_image = make_image(WIDTH, HEIGHT, 3)  
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -153,8 +150,6 @@ def image_detection(image, network, class_names, class_colors, thresh):
         return cv2.cvtColor(image, cv2.COLOR_BGR2RGB), filtered_detections, car_image
     else:
         return cv2.cvtColor(image_resized, cv2.COLOR_BGR2RGB), None, None
-
-#物件追蹤程式
 def TrackObj(newCenterList,ObjList1,objIndex):
     ObjListTemp=[]
     try:
@@ -168,21 +163,19 @@ def TrackObj(newCenterList,ObjList1,objIndex):
         logging.error('TrackObj error', exc_info=True)
         print('TrackObj error')
         return ObjListTemp,objIndex
-
-#位置比對程式
 def MatchObj(newP, ObjList1, ObjIndex):
     dtlist = []
     dtIndex = []
     direction = " "
-    dy = None
+    dx = None  # Change dy to dx for horizontal movement
     global count_id
 
     try:
-        # 只考慮前幾個畫面的物件進行比對
+        # Only consider objects in the previous few frames for comparison
         num_frames_to_compare = 2
         start_index = max(0, len(ObjList1) - num_frames_to_compare)
 
-        # 計算物件與前幾個畫面物件的距離
+        # Calculate the distance between the object and objects in previous frames
         for i in range(start_index, len(ObjList1)):
             distant = ((ObjList1[i][1] - newP[0]) ** 2 + (ObjList1[i][2] - newP[1]) ** 2) ** 0.5
             if distant < 150:
@@ -190,33 +183,32 @@ def MatchObj(newP, ObjList1, ObjIndex):
                 dtlist.append(distant)
 
         if len(dtlist) > 0:
-            # 找出最小距離對應的物件
+            # Find the object with the smallest distance
             min_distance_index = dtIndex[np.argmin(dtlist)]
             closest_object = ObjList1[min_distance_index]
 
             xx1, yy1 = closest_object[1], closest_object[2]
             xx2, yy2 = newP[0], newP[1]
-            dx, dy = xx2 - xx1, yy2 - yy1
+            dx, dy = xx2 - xx1, yy2 - yy1  # Calculate horizontal and vertical distances
             movement = abs(((closest_object[1] - newP[0]) ** 2 + (closest_object[2] - newP[1]) ** 2) ** 0.5)
 
-            #
-            if dy > 8 and round(movement) > 10:
-                direction = "DOWN"
-            elif dy < -8 and round(movement) > 10:
-                direction = "UP"
-            elif -8 <= dy <= 8 or round(movement) < 10:
-                direction = "stop"
+            if dx > 8 and round(movement) > 10:
+                direction = "RIGHT"  # Object is moving from left to right
+            elif dx < -8 and round(movement) > 10:
+                direction = "LEFT"  # Object is moving from right to left
+            elif -8 <= dx <= 8 or round(movement) < 10:
+                direction = "STOP"  # Object is stationary
 
-        if dtlist == []: 
+        if dtlist == []:
             ObjIndex += 1
             Obj = [ObjIndex, newP[0], newP[1], direction, count_id]
-        else:  
+        else:
             Obj = closest_object
             Obj[1], Obj[2] = newP[0], newP[1]
             Obj[3] = direction
             Obj[4] = int(Obj[4]) + 1
-        if dy:
-            print(f"目標:{ObjIndex}，Y軸差:{dy}，移動距離:{round(movement)}")
+        if dx:
+            print(f"目標:{ObjIndex}，X軸差:{dx}，移動距離:{round(movement)}")
         return Obj, ObjIndex
 
     except:
@@ -225,72 +217,59 @@ def MatchObj(newP, ObjList1, ObjIndex):
         return Obj, ObjIndex
 
 def get_direction(obj_list, obj_index):
-    up_count = 0
-    down_count = 0
+    left_count = 0
+    right_count = 0
     stop_count = 0
     last_objs = []
 
     for obj in obj_list:
         if obj[0] == obj_index:
-            if obj[3] == "UP":
-                up_count += 1
+            if obj[3] == "LEFT":
+                left_count += 1
                 last_objs.append(obj)
-            elif obj[3] == "DOWN":
-                down_count += 1
+            elif obj[3] == "RIGHT":
+                right_count += 1
                 last_objs.append(obj)
-            elif obj[3] == "stop":
+            elif obj[3] == "STOP":
                 stop_count += 1
                 last_objs.append(obj)
     
-    if up_count > down_count and up_count > stop_count:
+    if left_count > right_count and left_count > stop_count:
         return last_objs
-    elif down_count > up_count and  down_count > stop_count:
+    elif right_count > left_count and right_count > stop_count:
         return last_objs
-    elif stop_count > up_count and stop_count > down_count:
+    elif stop_count > left_count and stop_count > right_count:
         return None
     else:
         return None
-    
+
 def update_target_list(target):
-    global count_up, count_down
-    global previous_count_up, previous_count_down
+    global count_left, count_right
+    global previous_count_left, previous_count_right
 
     target_direction = target[0][3] 
     target_id = target[0][0]  
 
-    if target_direction == "UP" and previous_count_up == target_id:
+    if target_direction == "LEFT" and previous_count_left == target_id:
         return
-    elif target_direction == "DOWN" and previous_count_down == target_id:
+    elif target_direction == "RIGHT" and previous_count_right == target_id:
         return
 
-    if target_direction == "UP":
-        if previous_count_up != target_id:
-            count_up += 1
-            previous_count_up = target_id
-            print("count_up : ", f'{count_up} = {target_id} 號車')
-            if previous_count_up == previous_count_down: #實際使用之後可能需要把count_down -= 1移除，此動作只是為了澄信街在辨識區域內不規則位移做的手段
-                count_down -= 1
-    elif target_direction == "DOWN":
-        if previous_count_down != target_id:
-            count_down += 1
-            previous_count_down = target_id
-            print("count_down : ", f'{count_down} = {target_id} 號車')
-            if previous_count_down == previous_count_up: #實際使用之後可能需要把count_down -= 1移除，此動作只是為了澄信街在辨識區域內不規則位移做的手段
-                count_up -= 1
-    ''' 可以解決靜止物體影響其他車流狀況，但某些情況會讓行進中車輛在判斷區域尾端減速至stop狀況使方向回調導致記數少1
-    elif target_direction == "stop":
-        if previous_count_up == target_id:
-            count_up -= 1
-            previous_count_up = 0
-        elif previous_count_down == target_id:
-            count_down -= 1
-            previous_count_down = 0
-        '''#需要使用時把246行的None改成last_objs
+    if target_direction == "LEFT":
+        if previous_count_left != target_id:
+            count_left += 1
+            previous_count_left = target_id
+            print("count_left : ", f'{count_left} = {target_id} 號車')
+            if previous_count_left == previous_count_right:
+                count_right -= 1
+    elif target_direction == "RIGHT":
+        if previous_count_right != target_id:
+            count_right += 1
+            previous_count_right = target_id
+            print("count_right : ", f'{count_right} = {target_id} 號車')
+            if previous_count_right == previous_count_left:
+                count_left -= 1
 
-    if len(target) > 10:
-        target = target[-10:]
-
-    
 sum1=[]
 cap = VideoCapture(TARGET)
 ObjList=[]
@@ -327,8 +306,9 @@ while True:
         frame, detections, car_imagelist = image_detection(frame, network, class_names, class_colors, CONFTH)
         # detections[n]=(class,信任度,(x,y,w,h))
 
-        DLine = (y1 + y2) // 2 #偵測區域的中線
-        d_area = cv2.rectangle(frame, (x1, DLine), (x2, DLine), (0,0,255), 1, cv2.LINE_AA)
+        #DLine = (y1 + y2) // 2 #偵測區域的中線
+        DLine = (x1 + x2) // 2
+        d_area = cv2.rectangle(frame, (DLine, y1), (DLine, y2), (0,0,255), 1, cv2.LINE_AA)
 
         #新畫面中所有物件中心點        
         newCenterList=[]
@@ -346,29 +326,25 @@ while True:
         for i in range(len(ObjList)):
             cv2.putText(frame, str(ObjList[i][0]), (ObjList[i][1], ObjList[i][2]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
+
         target = get_direction(ObjList, objIndex)
         if target is not None:
-            #print("確認方向：",target)
             for i in target:
                 update_target_list(target)
                 now = time.localtime()
                 timestamp = time.strftime("%m%d%H%M%S", now)
-                # cv2.imwrite(r'C:/Users/Asc-user/Documents/YOLO/direction/cars/'+ str(timestamp) + '_' + str(obj[3]) +'.png', frame)
-
                 base64_data = img2base64(frame)
                 data = (base64_data, timestamp, i[3])
-            
-            if count_up != SQL_count_up or count_down != SQL_count_down:
+
+            if count_left != SQL_count_left or count_right != SQL_count_right:
                 insert_query = "INSERT INTO dir_test (Image, Daytime, Dir) VALUES (%s, %s, %s)"
                 added_thread = threading.Thread(target=upload_SQL, args=(insert_query, data))
                 added_thread.start()
-                SQL_count_up = count_up
-                SQL_count_down = count_down
-                
+                SQL_count_left = count_left
+                SQL_count_right = count_right
 
-        UP = cv2.putText(frame, "UP: {}".format(count_up), (20, 920), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 255, 0),thickness=4)
-        DOWN = cv2.putText(frame, "DOWN: {}".format(count_down), (20, 1010), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0),thickness=4)
-
+        LEFT = cv2.putText(frame, "LEFT: {}".format(count_left), (20, 920), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 255, 0), thickness=4)
+        RIGHT = cv2.putText(frame, "RIGHT: {}".format(count_right), (20, 1010), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), thickness=4)
 
         cv2.namedWindow("Inference", 0)
         cv2.resizeWindow("Inference", 800, 600)
@@ -381,6 +357,7 @@ while True:
         if out is not None :
             success = out.write(frame)  # 將影像寫入影片
             '''
+    
     except Exception as err:
         logging.error('main error', exc_info=True)
         print('main error')

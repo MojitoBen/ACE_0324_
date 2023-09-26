@@ -1,6 +1,6 @@
 import cv2
 import os
-from Dir_data import Get_data
+from urllib.parse import urlparse
 
 def get_coordinates_from_video(video_path):
     cap = cv2.VideoCapture(video_path)
@@ -72,14 +72,15 @@ def get_coordinates_from_video(video_path):
 
 
 while True:
-    Data_list = Get_data()
-    #video_path = input("Video Path: ")
-    video_path = Data_list[0]
-    if not os.path.isfile(video_path):
-        # 檢查輸入的影像位置是否為 RTSP 連接
-        if not video_path.startswith("rtsp://"):
+    video_path = input("Video Path: ")
+
+    # 檢查輸入的影像位置是否為 RTSP 連接或有效的網址
+    if not os.path.isfile(video_path) and not video_path.startswith("rtsp://"):
+        parsed_url = urlparse(video_path)
+        if not parsed_url.scheme or not parsed_url.netloc:
             print("無法讀取影像。請檢查影像位置是否正確。")
             continue
+
     break
 
 
@@ -88,15 +89,15 @@ coordinates = get_coordinates_from_video(video_path)
 if len(coordinates) == 2:
     x1, y1 = coordinates[0]
     x2, y2 = coordinates[1]
-    with open("Area.txt", "w") as file:
+    with open("Area2.txt", "w") as file:
         file.write("x1: {}\ny1: {}\nx2: {}\ny2: {}".format(x1, y1, x2, y2))
 elif len(coordinates) > 2:
     x1, y1 = coordinates[-2]
     x2, y2 = coordinates[-1]
-    if not os.path.exists("Area.txt"):
-        with open("Area.txt", "w") as file:
+    if not os.path.exists("Area2.txt"):
+        with open("Area2.txt", "w") as file:
             file.write("x1: {}\ny1: {}\nx2: {}\ny2: {}".format(x1, y1, x2, y2))
-    with open("Area.txt", "w") as file:
+    with open("Area2.txt", "w") as file:
         file.write("x1: {}\ny1: {}\nx2: {}\ny2: {}".format(x1, y1, x2, y2))
 
 print("Coordinates:", coordinates)

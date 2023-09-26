@@ -1,5 +1,6 @@
-Address=rtsp://~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-WEIGHT(yolov4.weights)=~~~~~~~~~~~~~~~~~~~~~~~~~~~~yolov4.weights
-CFG(yolov4.cfg)=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~yolov4.cfg
-DATA(coco.data)=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~coco.data
-valid_classes=[ "car","truck"]
+Address=rtsp://admin:Admin1234@192.168.1.151:554/Streaming/Channels/101
+WEIGHT(yolov4.weights)=C:\Users\Asc-user\Documents\YOLO\darknet\yolov4.weights
+CFG(yolov4.cfg)=C:\Users\Asc-user\Documents\YOLO\darknet\cfg\yolov4.cfg
+DATA(coco.data)=C:\Users\Asc-user\Documents\YOLO\darknet\cfg\coco.data
+valid_classes=[ "car","truck","motorbike"]
+logname=r'C:/Users/Asc-user/Documents/YOLO/direction/log/'
