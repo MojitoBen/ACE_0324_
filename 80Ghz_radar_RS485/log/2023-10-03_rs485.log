@@ -1,10 +1,2 @@
-2023-10-03 13:33:23,408 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:33:28,487 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:44:22,041 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:44:27,120 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:44:47,593 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:56:47,055 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:56:47,057 ERROR: connected failed: 'NoneType' object has no attribute 'replace'
-2023-10-03 13:57:14,454 DEBUG: 當前空距: 297，已達到警示空距標準: 300
-2023-10-03 13:57:19,520 ERROR: Failed to communicate with simulation server: [WinError 10061] 無法連線，因為目標電腦拒絕連線。
-2023-10-03 13:57:19,522 ERROR: connected failed: 'NoneType' object has no attribute 'replace'
+2023-10-03 14:36:38,418 DEBUG: 當前空距: 299，已達到警示空距標準: 300
+2023-10-03 15:20:08,895 DEBUG: 累積水量: 53，已達到警示水量標準: 50

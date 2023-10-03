@@ -30,8 +30,8 @@ while True:
     # 如果收到特定訊息，則回傳預設回應
     if data == '010300000001840A':
         print(f"收到訊息: {data}")
-        # 生成300到305之間的隨機數字
-        random_value = random.randint(295, 300)
+        # 生成A到B之間的隨機數字
+        random_value = random.randint(295, 305)
         # 將隨機數字轉換為十六進位字串，並補零到四位數
         hex_value = '{:04X}'.format(random_value)
         # 組合回應字串

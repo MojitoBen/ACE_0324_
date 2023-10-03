@@ -7,6 +7,7 @@ import tkinter as tk
 from tkinter import ttk, font
 import threading
 import cv2
+import os
 
 alarm_counter = 0
 
@@ -60,48 +61,63 @@ def startrun():
     notify_value = int(Setting_list[0])
     frequency = int(Setting_list[1])
     time_lag = (frequency // 3) * 1000
-    rtsp = Setting_list[2]
+    rtsp_url = Setting_list[2]
+    total_height = int(Setting_list[3])
     
     try:
-        
+
         command = '010300000001840A'  # 主機端向雷達詢問空距(cm)
         ser.write(bytes.fromhex(command))
         time.sleep(0.1)
         rs485_data = ser.readline().decode().strip()
         if rs485_data:
             rs485_data = rs485_data.replace(" ", "")
-        
+
         if rs485_data and len(rs485_data) == 14 and rs485_data.isalnum():
             distance_hex = rs485_data[6:10]
             distance_decimal = int(distance_hex, 16)
 
-            distance_show = distance_decimal  # 顯示在介面第一欄位
-            distance_label.config(text="當前空距: {}".format(distance_show))
+            distance_show = total_height - distance_decimal
+            distance_label.config(text="累積水量: {}".format(distance_show))
 
-            if distance_decimal < notify_value:  # 當小於警示空距時
+            if distance_show > notify_value:  # 當大於警示水量標準時
                 global alarm_counter
-                alarm_message = "已達警示空距標準: {}".format(notify_value)
+                alarm_message = "已達警示水量標準: {}".format(notify_value)
                 alarm_label.config(text=alarm_message, foreground="red")  # 將文字設為紅色
-                distance_label.config(foreground="red")  # 將當前空距文字設為紅色
+                distance_label.config(foreground="red")  # 將當前文字設為紅色
 
                 # 如果達到3次警示標準，發送訊息並重設計數器
                 if alarm_counter >= 2:
-                    alarm_message = "🚱🚱當前空距: {}，已連續達到警示空距標準三次: {}，請檢查🚱🚱".format(distance_show, notify_value)
-                    notify = {'message': alarm_message}
-                    send = requests.post(url, headers=headers, data=notify)
-                    print(send.text)
-                    logging.debug(f"當前空距: {distance_show}，已達到警示空距標準: {notify_value}")
-                    alarm_counter = 0
+                    captured_frame = capture_frame_from_rtsp(rtsp_url)
+                    if captured_frame is not None:
+                        if not os.path.exists('images'):
+                            os.makedirs('images')
+
+                        current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+                        image_filename = os.path.join('images', 'warning_frame_{}.jpg'.format(current_time))
+
+                        # 將影像存為檔案
+                        cv2.imwrite(image_filename, captured_frame)
+                        print("Captured frame saved")
+                    
+                        alarm_message = "🚱🚱累積水量: {}，已連續達到警示水量標準三次: {}，請檢查🚱🚱".format(distance_show, notify_value)
+                        notify = {'message': alarm_message}
+                        files = {'imageFile': open(image_filename, 'rb')}
+                        send = requests.post(url, headers=headers, data=notify, files=files)
+                        print("Upload to line group! status = ", send.status_code)
+                        logging.debug(f"累積水量: {distance_show}，已達到警示水量標準: {notify_value}")
+                        alarm_counter = 0
+                    else:
+                        print("Failed to capture frame from RTSP stream.")
                 else:
                     alarm_counter += 1
-                    
                     time.sleep(0.1)
                 print("警示記數 : ", alarm_counter)
-            else:  # 當超出警示空距時，將文字和顏色恢復成原本的狀態
-                alarm_label.config(text="警示空距: {}".format(notify_value), foreground="black")
-                distance_label.config(foreground="black")  # 將當前空距文字設為黑色
-                alarm_counter = 0  # 重設計數器
-        
+            else:
+                alarm_label.config(text="警示水量: {}".format(notify_value), foreground="black")
+                distance_label.config(foreground="black") 
+                alarm_counter = 0 
+
         root.update_idletasks()
         root.after(time_lag, startrun)
 
@@ -125,15 +141,15 @@ if __name__ == '__main__':
     
     font_style = font.Font(size=40)
 
-    distance_label = ttk.Label(root, text="當前空距:", font=font_style)
+    distance_label = ttk.Label(root, text="累積水量:", font=font_style)
     distance_label.pack(pady=10)
     
     initial_alarm_text = Setting_list[0]
-    alarm_label = ttk.Label(root, text="警示空距: {}".format(initial_alarm_text), font=font_style)
+    alarm_label = ttk.Label(root, text="警示水量: {}".format(initial_alarm_text), font=font_style)
     alarm_label.pack(pady=10)
     
     frequency = Setting_list[1]
-    frequency_label = ttk.Label(root, text="回傳頻率:", font=font_style)
+    frequency_label = ttk.Label(root, text="警示回傳頻率:", font=font_style)
     frequency_label.pack(pady=10)
     frequency_label.config(text="回傳頻率: {} 秒".format(frequency))
 
