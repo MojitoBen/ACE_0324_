@@ -4,7 +4,10 @@
  要安裝 pymysql.cursors    
  opencv - 最新就好、 logging、threading、queue、time、datetime**
 
-## Y562_cam1.py :主程式(不上傳進資料庫單純辨識)
+## main_test.py :主程式(不上傳進資料庫單純辨識)
+
+*修改host、port、rtsp或影片路徑
+*搭配IO_in模擬信號輸入
 
 ![image](https://github.com/MojitoBen/ACE_0324_/blob/main/steel_paint/Y562_resource/0717_test.png)
 
@@ -22,7 +25,7 @@
 
 ## steel_rotate180.py & sid_cam1.py : 辨識用
 
-* steel_rotate180.py跟sid_cam1.py裡面的darknet跟load_network部分要改成自己檔案位置的路徑
+* steel_rotate180.py跟sid_cam1.py裡面的darknet跟load_network部分要改成自己檔案或權重(weights)位置的路徑
 
 ## 流程圖
 
