@@ -1,5 +1,3 @@
-import serial
-import time
 import requests
 import datetime
 import logging
@@ -7,53 +5,52 @@ import tkinter as tk
 from tkinter import ttk, font
 import threading
 import cv2
+import time
+import socket
 
 alarm_counter = 0
-
-def Get_data():
-    try:
-        f = open('Setting.txt')
-        Data_list=[]
-        for line in f.readlines():
-            a = line.split('=')
-            Data_list.append(a[1].strip())
-        f.close()
-        return Data_list
-    except:
-        logging.error('get data failed')
-        print('get data failed')
-
-def capture_frame_from_rtsp(rtsp_url):
-    cap = cv2.VideoCapture(rtsp_url)
-    if not cap.isOpened():
-        print("Error: Could not open RTSP stream.")
-        return None
-
-    ret, frame = cap.read()
-    cap.release()
-
-    if ret:
-        return frame
-    else:
-        print("Error: Could not read frame from RTSP stream.")
-        return None
-    
-
 # 配置Line Notify
 url = 'https://notify-api.line.me/api/notify'
 token = 'OoPCuvvUYYq8nyV5AXexAMabJ51HR8zo92iew44x6AS'
 headers = {
     'Authorization': 'Bearer ' + token
 }
+def Get_data():
+    try:
+        f = open('Setting.txt')
+        Data_list = []
+        for line in f.readlines():
+            a = line.split('=')
+            Data_list.append(a[1].strip())
+        f.close()
+        return Data_list
+    except Exception as e:
+        logging.error('get data failed: {}'.format(str(e)))
+        print('get data failed')
 
-# 配置RS485串口
-ser = serial.Serial(
-    port='/dev/ttyUSB0',
-    baudrate=9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS
-)
+def send_request_to_simulation_server():
+    server_ip = '127.0.0.1'  # 模擬程式的IP地址
+    server_port = 12345  # 模擬程式的埠號
+
+    try:
+        # 連接到模擬程式的伺服器
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((server_ip, server_port))
+
+        # 發送訊息到模擬程式
+        message = '010300000001840A'
+        client_socket.sendall(message.encode('utf-8'))
+
+        # 接收模擬程式的回應
+        response = client_socket.recv(1024).decode('utf-8').strip()
+
+        # 關閉連接
+        client_socket.close()
+
+        return response
+    except Exception as e:
+        logging.error('Failed to communicate with simulation server: {}'.format(str(e)))
+        return None
 
 def startrun():
     Setting_list = Get_data()
@@ -63,14 +60,10 @@ def startrun():
     rtsp = Setting_list[2]
     
     try:
-        
-        command = '010300000001840A'  # 主機端向雷達詢問空距(cm)
-        ser.write(bytes.fromhex(command))
-        time.sleep(0.1)
-        rs485_data = ser.readline().decode().strip()
+        rs485_data = send_request_to_simulation_server()
         if rs485_data:
             rs485_data = rs485_data.replace(" ", "")
-        
+
         if rs485_data and len(rs485_data) == 14 and rs485_data.isalnum():
             distance_hex = rs485_data[6:10]
             distance_decimal = int(distance_hex, 16)
@@ -89,25 +82,25 @@ def startrun():
                     alarm_message = "🚱🚱當前空距: {}，已連續達到警示空距標準三次: {}，請檢查🚱🚱".format(distance_show, notify_value)
                     notify = {'message': alarm_message}
                     send = requests.post(url, headers=headers, data=notify)
-                    print(send.text)
+                    print(send.status_code, send.text)
                     logging.debug(f"當前空距: {distance_show}，已達到警示空距標準: {notify_value}")
                     alarm_counter = 0
                 else:
                     alarm_counter += 1
-                    
                     time.sleep(0.1)
                 print("警示記數 : ", alarm_counter)
             else:  # 當超出警示空距時，將文字和顏色恢復成原本的狀態
                 alarm_label.config(text="警示空距: {}".format(notify_value), foreground="black")
                 distance_label.config(foreground="black")  # 將當前空距文字設為黑色
                 alarm_counter = 0  # 重設計數器
-        
+
         root.update_idletasks()
         root.after(time_lag, startrun)
 
     except Exception as e:
         print(f"connected failed:", str(e))
         logging.error(f"connected failed: {str(e)}")
+
 
 if __name__ == '__main__':
     logname = 'log/'
@@ -133,7 +126,7 @@ if __name__ == '__main__':
     alarm_label.pack(pady=10)
     
     frequency = Setting_list[1]
-    frequency_label = ttk.Label(root, text="回傳頻率:", font=font_style)
+    frequency_label = ttk.Label(root, text="警示回傳頻率:", font=font_style)
     frequency_label.pack(pady=10)
     frequency_label.config(text="回傳頻率: {} 秒".format(frequency))
 
