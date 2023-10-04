@@ -13,15 +13,17 @@ alarm_counter = 0
 
 def Get_data():
     try:
-        f = open('Setting.txt')
-        Data_list=[]
-        for line in f.readlines():
-            a = line.split('=')
-            Data_list.append(a[1].strip())
-        f.close()
-        return Data_list
-    except:
-        logging.error('get data failed')
+        with open('Setting.txt', 'r') as f:
+            Data_list = []
+            for line in f.readlines():
+                a = line.split('=', 1)
+                if len(a) > 1:
+                    Data_list.append(a[1].strip())
+                else:
+                    logging.warning(f"No data found after '=' in line: {line.strip()}")
+            return Data_list
+    except Exception as e:
+        logging.error(f'Error occurred: {e}')
         print('get data failed')
 
 def capture_frame_from_rtsp(rtsp_url):
@@ -40,14 +42,14 @@ def capture_frame_from_rtsp(rtsp_url):
         return None
     
 
-# 配置Line Notify
+# Line Notify
 url = 'https://notify-api.line.me/api/notify'
 token = 'OoPCuvvUYYq8nyV5AXexAMabJ51HR8zo92iew44x6AS'
 headers = {
     'Authorization': 'Bearer ' + token
 }
 
-# 配置RS485串口
+# RS485串口
 ser = serial.Serial(
     port='/dev/ttyUSB0',
     baudrate=9600,

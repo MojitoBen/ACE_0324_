@@ -18,15 +18,17 @@ headers = {
 }
 def Get_data():
     try:
-        f = open('Setting.txt')
-        Data_list = []
-        for line in f.readlines():
-            a = line.split('=')
-            Data_list.append(a[1].strip())
-        f.close()
-        return Data_list
+        with open('Setting.txt', 'r') as f:
+            Data_list = []
+            for line in f.readlines():
+                a = line.split('=', 1)
+                if len(a) > 1:
+                    Data_list.append(a[1].strip())
+                else:
+                    logging.warning(f"No data found after '=' in line: {line.strip()}")
+            return Data_list
     except Exception as e:
-        logging.error('get data failed: {}'.format(str(e)))
+        logging.error(f'Error occurred: {e}')
         print('get data failed')
 
 def send_request_to_simulation_server():
