@@ -45,9 +45,6 @@ pip install -i https://mirrors.aliyun.com/pypi/simple/opencv-python==3.4.2.16
 
 ![image](https://github.com/MojitoBen/ACE_0324_/blob/main/80Ghz_radar_RS485/readimg/TCP.png)
 
-## 流程圖
-
-* 流程圖還沒畫
 
 
 
