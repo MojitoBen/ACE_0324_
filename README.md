@@ -1,6 +1,8 @@
 # ACE_0324_
 "Work progress, learning, and similar things."
 
+**"This section will no longer be updated"(2023.10.05)**
+
 **python resource**
 https://github.com/FavioVazquez/ds-cheatsheets/tree/master/Python
 
